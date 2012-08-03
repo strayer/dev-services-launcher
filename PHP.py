@@ -18,6 +18,15 @@ class PHP(object):
                 )
             )
 
+    def __str__(self):
+        args = [os.path.join(self.path, "php-cgi.exe"), '--version']
+
+        proc = subprocess.Popen(args=args, stdout=subprocess.PIPE, stdin=subprocess.PIPE, stderr=subprocess.PIPE)
+        stdout, stderr = proc.communicate()
+        stdout_lines = stdout.splitlines()
+
+        return stdout_lines[0].decode('utf-8')
+
     def stop(self):
         for process in self.processes:
             # process.terminate() gets an "Access denied" - no idea why...

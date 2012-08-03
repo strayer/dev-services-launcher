@@ -36,6 +36,16 @@ class Nginx(object):
         self.process.wait()
         stop_process.wait()
 
+    def __str__(self):
+        args = [os.path.join(self.path, "nginx.exe"), '-v']
+
+        proc = subprocess.Popen(args=args, stdout=subprocess.PIPE, stdin=subprocess.PIPE, stderr=subprocess.PIPE)
+        stdout, stderr = proc.communicate()
+
+        stderr = stderr.replace(b'nginx version: ', b'')
+
+        return stderr.strip().decode('utf-8')
+
     def get_php_upstream(self):
         return self.upstreams.get("php")
 

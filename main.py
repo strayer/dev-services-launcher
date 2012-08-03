@@ -7,10 +7,14 @@ from Nginx import Nginx
 from PHP import PHP
 
 nginx_path = os.path.join('C:\\', 'opt', 'nginx')
-php_path = os.path.join('C:\\', 'opt', 'php')
+php_path = os.path.join('C:\\', 'opt', 'php-5.4')
 
 nginx = Nginx(nginx_path)
 php = PHP(php_path, nginx.get_php_upstream())
+
+print("PHP version: {}".format(php))
+print("Nginx version: {}".format(nginx))
+print('')
 
 stop_execution = False
 
@@ -22,7 +26,7 @@ def signal_handler(signal, frame):
 
 signal.signal(signal.SIGINT, signal_handler)
 
-print("Starting PHP")
+print("Starting PHP ({} instances)".format(len(php.addresses)))
 php.start()
 print("Starting Nginx")
 nginx.start()
