@@ -1,6 +1,6 @@
 import subprocess
 import os
-import signal
+from tools import win32_kill
 
 class PHP(object):
     def __init__(self, php_path, addresses):
@@ -29,7 +29,5 @@ class PHP(object):
 
     def stop(self):
         for process in self.processes:
-            # process.terminate() gets an "Access denied" - no idea why...
-            os.kill(process.pid, signal.CTRL_C_EVENT)
-            process.wait()
+            win32_kill(process.pid)
         self.processes = []

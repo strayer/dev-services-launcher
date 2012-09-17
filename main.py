@@ -1,7 +1,6 @@
 # coding=utf-8
 import os
-import signal
-import time
+import tools
 
 from Nginx import Nginx
 from PHP import PHP
@@ -18,26 +17,27 @@ print('')
 
 stop_execution = False
 
-# catch SIGINT and tell the loop to stop
-def signal_handler(signal, frame):
-    global stop_execution
-    print("Signal received")
-    stop_execution = True
-
-signal.signal(signal.SIGINT, signal_handler)
-
 print("Starting PHP ({} instances)".format(len(php.addresses)))
 php.start()
 print("Starting Nginx")
 nginx.start()
 
-while not stop_execution:
-    # An exception will be thrown when the signal_handler is executed while the sleep function is running.
-    # Since we want it to stop anyways we can simply ignore it
-    try:
-        time.sleep(10)
-    except IOError:
-        pass
+print("")
+print("Menu:")
+print("(STRG+c) or (q) to quit")
+print("(r) to reload nginx config")
+print("")
+
+while True:
+    char = tools.getch()
+
+    if (char == b"\x03" or char == b"q"):
+        break
+    elif char == b"r":
+        print("Reloading nginx config... ",end="")
+        nginx.reload_config()
+        print("done")
+        print("")
 
 print("Stopping processes...")
 nginx.stop()

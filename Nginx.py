@@ -36,6 +36,14 @@ class Nginx(object):
         self.process.wait()
         stop_process.wait()
 
+    def reload_config(self):
+        reload_process = subprocess.Popen(
+            args = [os.path.join(self.path, "nginx.exe"), '-s', 'reload'],
+            cwd = self.path
+        )
+
+        reload_process.wait()
+
     def __str__(self):
         args = [os.path.join(self.path, "nginx.exe"), '-v']
 
