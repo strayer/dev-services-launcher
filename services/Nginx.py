@@ -21,7 +21,7 @@ class Nginx(object):
         if settings.START_PHP:
             self.parse_upstreams()
 
-            if not self.upstreams.__contains__('php'):
+            if not self.upstreams.__contains__("php"):
                 sys.exit("Could not find upstream php in nginx config")
 
     def start(self):
@@ -32,7 +32,7 @@ class Nginx(object):
 
     def stop(self,):
         stop_process = subprocess.Popen(
-            args = [self.executable, '-s', 'quit'],
+            args = [self.executable, "-s", "quit"],
             cwd = self.path
         )
 
@@ -41,7 +41,7 @@ class Nginx(object):
 
     def reload_config(self):
         reload_process = subprocess.Popen(
-            args = [self.executable, '-s', 'reload'],
+            args = [self.executable, "-s", "reload"],
             cwd = self.path
         )
 
@@ -53,13 +53,13 @@ class Nginx(object):
         proc = subprocess.Popen(args=args, stdout=subprocess.PIPE, stdin=subprocess.PIPE, stderr=subprocess.PIPE)
         stdout, stderr = proc.communicate()
 
-        stderr = stderr.replace(b'nginx version: ', b'')
+        stderr = stderr.replace(b"nginx version: ", b"")
 
-        return stderr.strip().decode('utf-8')
+        return stderr.strip().decode("utf-8")
 
     def get_php_upstream(self):
         if not settings.START_PHP:
-            raise Exception('Upstreams are only parsed when START_PHP is True')
+            raise Exception("Upstreams are only parsed when START_PHP is True")
         return self.upstreams.get("php")
 
     def parse_upstreams(self):
@@ -74,7 +74,7 @@ class Nginx(object):
         # define basic building blocks
         integer = Word(nums)
         ip_int = integer.copy().setParseAction(validInRange(0, 255))
-        ip_addr = Combine(ip_int + ('.' + ip_int) * 3)
+        ip_addr = Combine(ip_int + ("." + ip_int) * 3)
         ip_port = integer.copy().setParseAction(validInRange(1025, 65535))
         ip_addr_port = ip_addr("ip_addr") + ':' + ip_port("ip_port")
         ident = Word(alphas, alphanums + "_")
