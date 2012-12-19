@@ -8,8 +8,9 @@ from pyparsing import Word, nums, Combine, alphas, alphanums, Suppress, Keyword,
 
 class Nginx(object):
     def __init__(self):
-        self.path = settings.NGINX_PATH
-        self.config_path = os.path.join(self.path, "conf", "nginx.conf")
+        self.path = settings.NGINX_CWD
+        self.executable = settings.NGINX_EXECUTABLE
+        self.config_path = settings.NGINX_CONF
         self.upstreams = {}
 
         if not os.path.exists(self.config_path):
@@ -24,13 +25,13 @@ class Nginx(object):
 
     def start(self):
         self.process = subprocess.Popen(
-            args = [os.path.join(self.path, "nginx.exe")],
+            args = [self.executable],
             cwd = self.path
         )
 
     def stop(self,):
         stop_process = subprocess.Popen(
-            args = [os.path.join(self.path, "nginx.exe"), '-s', 'quit'],
+            args = [self.executable, '-s', 'quit'],
             cwd = self.path
         )
 
@@ -39,14 +40,14 @@ class Nginx(object):
 
     def reload_config(self):
         reload_process = subprocess.Popen(
-            args = [os.path.join(self.path, "nginx.exe"), '-s', 'reload'],
+            args = [self.executable, '-s', 'reload'],
             cwd = self.path
         )
 
         reload_process.wait()
 
     def __str__(self):
-        args = [os.path.join(self.path, "nginx.exe"), '-v']
+        args = [self.executable, '-v']
 
         proc = subprocess.Popen(args=args, stdout=subprocess.PIPE, stdin=subprocess.PIPE, stderr=subprocess.PIPE)
         stdout, stderr = proc.communicate()

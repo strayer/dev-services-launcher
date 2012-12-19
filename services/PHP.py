@@ -5,7 +5,9 @@ import settings
 
 class PHP(object):
     def __init__(self, addresses):
-        self.path = settings.PHP_PATH
+        self.path = settings.PHP_CWD
+        self.executable = settings.PHP_EXECUTABLE
+        self.ini = settings.PHP_INI
         self.addresses = addresses
         self.processes = []
 
@@ -13,13 +15,13 @@ class PHP(object):
         for address in self.addresses:
             self.processes.append(
                 subprocess.Popen(
-                    args = [os.path.join(self.path, "php-cgi.exe"), "-b", address],
+                    args = [self.executable, "-b", address, '-c', self.ini],
                     cwd = self.path
                 )
             )
 
     def __str__(self):
-        args = [os.path.join(self.path, "php-cgi.exe"), '--version']
+        args = [self.executable, '--version', '-c', self.ini]
 
         proc = subprocess.Popen(args=args, stdout=subprocess.PIPE, stdin=subprocess.PIPE, stderr=subprocess.PIPE)
         stdout, stderr = proc.communicate()
