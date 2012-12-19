@@ -18,10 +18,11 @@ class Nginx(object):
 
         self.nginx_config = open(self.config_path).read()
 
-        self.parse_upstreams()
+        if settings.START_PHP:
+            self.parse_upstreams()
 
-        if not self.upstreams.__contains__('php'):
-            sys.exit("Could not find upstream php in nginx config")
+            if not self.upstreams.__contains__('php'):
+                sys.exit("Could not find upstream php in nginx config")
 
     def start(self):
         self.process = subprocess.Popen(
@@ -57,6 +58,8 @@ class Nginx(object):
         return stderr.strip().decode('utf-8')
 
     def get_php_upstream(self):
+        if not settings.START_PHP:
+            raise Exception('Upstreams are only parsed when START_PHP is True')
         return self.upstreams.get("php")
 
     def parse_upstreams(self):
