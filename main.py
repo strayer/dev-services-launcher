@@ -1,17 +1,20 @@
 #!/usr/bin/python3
 # coding=utf-8
 import os
-from services import Nginx, PHP
+from services import Nginx, PHP, MongoDB
 import tools
 import settings
 
 nginx = Nginx()
 php = PHP(nginx.get_php_upstream())
+mongodb = MongoDB()
 
 if settings.START_PHP:
     print("PHP version: {}".format(php))
 if settings.START_NGINX:
     print("Nginx version: {}".format(nginx))
+if settings.START_MONGODB:
+    print("MongoDB version: {}".format(mongodb))
 
 print('')
 
@@ -23,6 +26,9 @@ if settings.START_PHP:
 if settings.START_NGINX:
     print("Starting Nginx")
     nginx.start()
+if settings.START_NGINX:
+    print("Starting MongoDB")
+    mongodb.start()
 
 print("")
 print("Menu:")
@@ -53,3 +59,5 @@ if settings.START_NGINX:
     nginx.stop()
 if settings.START_PHP:
     php.stop()
+if settings.START_MONGODB:
+    mongodb.stop()
