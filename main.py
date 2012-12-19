@@ -42,13 +42,11 @@ while True:
         print("Reloading nginx config... ",end="")
         nginx.reload_config()
         print("done")
-        print("")
     elif char == b"p" and settings.START_PHP:
         print("Restarting php processes... ",end="")
         php.stop()
         php.start()
         print("done")
-        print("")
 
 print("Stopping processes...")
 if settings.START_NGINX:
