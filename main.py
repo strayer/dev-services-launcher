@@ -1,3 +1,4 @@
+#!/usr/bin/python3
 # coding=utf-8
 import os
 from services import Nginx, PHP
@@ -33,7 +34,7 @@ print("")
 while True:
     char = tools.getch()
 
-    if (char == b"\x03" or char == b"q"):
+    if char == b"\x03" or char == b"q":
         break
     elif char == b"r" and settings.START_NGINX:
         print("Reloading nginx config... ",end="")
