@@ -29,6 +29,8 @@ print("Menu:")
 print("(STRG+c) or (q) to quit")
 if settings.START_NGINX:
     print("(r) to reload nginx config")
+if settings.START_PHP:
+    print("(p) to restart php processes")
 print("")
 
 while True:
@@ -39,6 +41,12 @@ while True:
     elif char == b"r" and settings.START_NGINX:
         print("Reloading nginx config... ",end="")
         nginx.reload_config()
+        print("done")
+        print("")
+    elif char == b"p" and settings.START_PHP:
+        print("Restarting php processes... ",end="")
+        php.stop()
+        php.start()
         print("done")
         print("")
 

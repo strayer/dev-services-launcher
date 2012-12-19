@@ -10,7 +10,6 @@ class PHP(object):
         self.processes = []
 
     def start(self):
-        self.stop()
         for address in self.addresses:
             self.processes.append(
                 subprocess.Popen(
