@@ -1,7 +1,12 @@
 # coding=utf-8
+import glob
+import re
 import subprocess
 import os
 import settings
+import threading
+import sys
+import time
 
 class MongoDB(object):
     def __init__(self):
@@ -9,6 +14,28 @@ class MongoDB(object):
         self.executable = settings.MONGODB_EXECUTABLE
         self.client_executable = settings.MONGODB_CLIENT_EXECUTABLE
         self.config_path = settings.MONGODB_CONF
+
+        self.touch_thread = None
+        self.abort_db_touch = False
+        self.dbpath = None
+
+        if not os.path.exists(self.config_path):
+            sys.exit("Could not find nginx config at path "+self.config_path)
+
+        if settings.MONGODB_PERIODICALLY_TOUCH_DB_FILES:
+            with open(self.config_path, 'r') as conf:
+                regex = re.compile('dbpath\s*=\s*(.+)\s*$')
+                for line in conf:
+                    r = regex.match(line)
+                    if r:
+                        self.dbpath = r.groups()[0]
+
+                        if not os.path.isabs(self.dbpath):
+                            self.dbpath = os.path.join(self.path, self.dbpath)
+
+            if not self.dbpath or not os.path.exists(self.dbpath):
+                print('Warning! Could not find MongoDB dbpath!')
+                print('Automatic touch of db files disabled.')
 
     def start(self):
         with open(os.devnull, "w") as fnull:
@@ -18,6 +45,12 @@ class MongoDB(object):
                 stdout = fnull
             )
 
+            if settings.MONGODB_PERIODICALLY_TOUCH_DB_FILES and self.dbpath:
+                    if not self.touch_thread:
+                        self.touch_thread = threading.Thread(target=self.db_touch)
+                    self.abort_db_touch = False
+                    self.touch_thread.start()
+
     def stop(self,):
         with open(os.devnull, "w") as fnull:
             stop_process = subprocess.Popen(
@@ -26,8 +59,24 @@ class MongoDB(object):
                 stdout = fnull
             )
 
+            if settings.MONGODB_PERIODICALLY_TOUCH_DB_FILES:
+                self.abort_db_touch = True
+
             self.process.wait()
             stop_process.wait()
+            if settings.MONGODB_PERIODICALLY_TOUCH_DB_FILES:
+                self.touch_thread.join()
+
+    def db_touch(self):
+        while not self.abort_db_touch:
+            data_files = glob.glob(os.path.join(self.dbpath, '*.[0-9]*'))
+            data_files+= glob.glob(os.path.join(self.dbpath, '*.ns'))
+
+            for file in data_files:
+                path = os.path.join(self.dbpath, file)
+                if os.path.exists(path):
+                    os.utime(path)
+            time.sleep(1)
 
     def __str__(self):
         args = [self.executable, "--config", self.config_path, "--version"]

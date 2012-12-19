@@ -11,6 +11,8 @@ MONGODB_EXECUTABLE = os.path.join(MONGODB_CWD, "bin", "mongod.exe")
 MONGODB_CLIENT_EXECUTABLE = os.path.join(MONGODB_CWD, "bin", "mongo.exe")
 MONGODB_CONF = os.path.join(MONGODB_CWD, "mongodb.conf")
 
+MONGODB_PERIODICALLY_TOUCH_DB_FILES = True
+
 START_NGINX = True
 START_PHP = True
 START_MONGODB = True
