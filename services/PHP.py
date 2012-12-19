@@ -1,10 +1,11 @@
 import subprocess
 import os
 from tools import win32_kill
+import settings
 
 class PHP(object):
-    def __init__(self, php_path, addresses):
-        self.path = php_path
+    def __init__(self, addresses):
+        self.path = settings.PHP_PATH
         self.addresses = addresses
         self.processes = []
 

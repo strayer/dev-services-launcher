@@ -2,12 +2,13 @@
 import subprocess
 import os
 import sys
+import settings
 
 from pyparsing import Word, nums, Combine, alphas, alphanums, Suppress, Keyword, OneOrMore, Group, ParseException
 
 class Nginx(object):
-    def __init__(self, nginx_path):
-        self.path = nginx_path
+    def __init__(self):
+        self.path = settings.NGINX_PATH
         self.config_path = os.path.join(self.path, "conf", "nginx.conf")
         self.upstreams = {}
 

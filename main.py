@@ -1,31 +1,33 @@
 # coding=utf-8
 import os
+from services import Nginx, PHP
 import tools
+import settings
 
-from Nginx import Nginx
-from PHP import PHP
+nginx = Nginx()
+php = PHP(nginx.get_php_upstream())
 
-nginx_path = os.path.join('C:\\', 'opt', 'nginx')
-php_path = os.path.join('C:\\', 'opt', 'php-5.4')
+if settings.START_PHP:
+    print("PHP version: {}".format(php))
+if settings.START_NGINX:
+    print("Nginx version: {}".format(nginx))
 
-nginx = Nginx(nginx_path)
-php = PHP(php_path, nginx.get_php_upstream())
-
-print("PHP version: {}".format(php))
-print("Nginx version: {}".format(nginx))
 print('')
 
 stop_execution = False
 
-print("Starting PHP ({} instances)".format(len(php.addresses)))
-php.start()
-print("Starting Nginx")
-nginx.start()
+if settings.START_PHP:
+    print("Starting PHP ({} instances)".format(len(php.addresses)))
+    php.start()
+if settings.START_NGINX:
+    print("Starting Nginx")
+    nginx.start()
 
 print("")
 print("Menu:")
 print("(STRG+c) or (q) to quit")
-print("(r) to reload nginx config")
+if settings.START_NGINX:
+    print("(r) to reload nginx config")
 print("")
 
 while True:
@@ -33,12 +35,14 @@ while True:
 
     if (char == b"\x03" or char == b"q"):
         break
-    elif char == b"r":
+    elif char == b"r" and settings.START_NGINX:
         print("Reloading nginx config... ",end="")
         nginx.reload_config()
         print("done")
         print("")
 
 print("Stopping processes...")
-nginx.stop()
-php.stop()
+if settings.START_NGINX:
+    nginx.stop()
+if settings.START_PHP:
+    php.stop()
