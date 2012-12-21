@@ -66,17 +66,28 @@ class MongoDB(object):
             stop_process.wait()
             if settings.MONGODB_PERIODICALLY_TOUCH_DB_FILES:
                 self.touch_thread.join()
+                # One last touch since there should be no more permission errors
+                self.db_touch()
+
+    def db_touch_loop(self):
+        while not self.abort_db_touch:
+            self.db_touch()
+            time.sleep(5)
 
     def db_touch(self):
-        while not self.abort_db_touch:
-            data_files = glob.glob(os.path.join(self.dbpath, '*.[0-9]*'))
-            data_files+= glob.glob(os.path.join(self.dbpath, '*.ns'))
+        data_files = glob.glob(os.path.join(self.dbpath, '*.[0-9]*'))
+        data_files+= glob.glob(os.path.join(self.dbpath, '*.ns'))
 
-            for file in data_files:
-                path = os.path.join(self.dbpath, file)
-                if os.path.exists(path):
+        for file in data_files:
+            path = os.path.join(self.dbpath, file)
+            if os.path.exists(path):
+                try:
                     os.utime(path)
-            time.sleep(1)
+                except PermissionError as e:
+                    # Ignore permission errors when somebody else openend the file
+                    # (propably MongoDB... still have to investigate this)
+                    if e.winerror != 32:
+                        raise
 
     def __str__(self):
         args = [self.executable, "--config", self.config_path, "--version"]
