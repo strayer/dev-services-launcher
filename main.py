@@ -25,7 +25,7 @@ if settings.START_PHP:
 if settings.START_NGINX:
     print("Starting Nginx")
     nginx.start()
-if settings.START_NGINX:
+if settings.START_MONGODB:
     print("Starting MongoDB")
     mongodb.start()
 
