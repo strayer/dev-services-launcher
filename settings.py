@@ -10,9 +10,15 @@ MONGODB_CWD = os.path.join("E:\\", "bin", "srv", "mongodb")
 MONGODB_EXECUTABLE = os.path.join(MONGODB_CWD, "bin", "mongod.exe")
 MONGODB_CLIENT_EXECUTABLE = os.path.join(MONGODB_CWD, "bin", "mongo.exe")
 MONGODB_CONF = os.path.join(MONGODB_CWD, "mongodb.conf")
+MYSQL_CWD = os.path.join("C:\\", "opt", "mysql")
+MYSQLD_EXECUTABLE = os.path.join(MYSQL_CWD, "bin", "mysqld.exe")
+MYSQLADMIN_EXECUTABLE = os.path.join(MYSQL_CWD, "bin", "mysqladmin.exe")
+MYSQLADMIN_PARAMS = ['--host', '127.0.0.1', '--user', 'root']
+MYSQL_CONF = os.path.join(MYSQL_CWD, "bin", "my.ini")
 
 MONGODB_PERIODICALLY_TOUCH_DB_FILES = True
 
 START_NGINX = True
 START_PHP = True
 START_MONGODB = True
+START_MYSQL = True

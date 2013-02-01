@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 # coding=utf-8
-from services import Nginx, NginxConfigException, PHP, MongoDB
+from services import Nginx, NginxConfigException, PHP, MongoDB, MySQL
 import tools
 import settings
 
@@ -12,6 +12,7 @@ except NginxConfigException:
     pass
 php = PHP(nginx_upstreams)
 mongodb = MongoDB()
+mysql = MySQL()
 
 if settings.START_PHP:
     print("PHP version: {}".format(php))
@@ -19,6 +20,8 @@ if settings.START_NGINX:
     print("Nginx version: {}".format(nginx))
 if settings.START_MONGODB:
     print("MongoDB version: {}".format(mongodb))
+if settings.START_MYSQL:
+    print("MySQL version: {}".format(mysql))
 
 print("")
 
@@ -33,6 +36,9 @@ if settings.START_NGINX:
 if settings.START_MONGODB:
     print("Starting MongoDB")
     mongodb.start()
+if settings.START_MYSQL:
+    print("Starting MySQL")
+    mysql.start()
 
 print("")
 print("Menu:")
@@ -66,3 +72,5 @@ if settings.START_PHP:
     php.stop()
 if settings.START_MONGODB:
     mongodb.stop()
+if settings.START_MYSQL:
+    mysql.stop()
