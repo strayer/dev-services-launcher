@@ -20,7 +20,7 @@ class MongoDB(object):
         self.dbpath = None
 
         if not os.path.exists(self.config_path):
-            sys.exit("Could not find nginx config at path "+self.config_path)
+            sys.exit("Could not find MongoDB config at path "+self.config_path)
 
         if settings.MONGODB_PERIODICALLY_TOUCH_DB_FILES:
             with open(self.config_path, 'r') as conf:
