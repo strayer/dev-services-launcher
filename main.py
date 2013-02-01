@@ -1,11 +1,16 @@
 #!/usr/bin/python3
 # coding=utf-8
-from services import Nginx, PHP, MongoDB
+from services import Nginx, NginxConfigException, PHP, MongoDB
 import tools
 import settings
 
 nginx = Nginx()
-php = PHP(nginx.get_php_upstream())
+nginx_upstreams = None
+try:
+    nginx_upstreams = nginx.get_php_upstream()
+except NginxConfigException:
+    pass
+php = PHP(nginx_upstreams)
 mongodb = MongoDB()
 
 if settings.START_PHP:

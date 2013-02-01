@@ -6,6 +6,9 @@ import settings
 
 from pyparsing import Word, nums, Combine, alphas, alphanums, Suppress, Keyword, OneOrMore, Group, ParseException
 
+class NginxConfigException(Exception):
+    pass
+
 class Nginx(object):
     def __init__(self):
         self.path = settings.NGINX_CWD
@@ -59,7 +62,7 @@ class Nginx(object):
 
     def get_php_upstream(self):
         if not settings.START_PHP:
-            raise Exception("Upstreams are only parsed when START_PHP is True")
+            raise NginxConfigException("Upstreams are only parsed when START_PHP is True")
         return self.upstreams.get("php")
 
     def parse_upstreams(self):

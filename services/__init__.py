@@ -1,3 +1,3 @@
-from .Nginx import Nginx
+from .Nginx import Nginx, NginxConfigException
 from .PHP import PHP
 from .MongoDB import MongoDB
