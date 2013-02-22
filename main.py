@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 # coding=utf-8
-from services import Nginx, NginxConfigException, PHP, MongoDB, MySQL
+from services import Nginx, NginxConfigException, PHP, MongoDB, MySQL, Redis
 import tools
 import settings
 
@@ -13,6 +13,7 @@ except NginxConfigException:
 php = PHP(nginx_upstreams)
 mongodb = MongoDB()
 mysql = MySQL()
+redis = Redis()
 
 if settings.START_PHP:
     print("PHP version: {}".format(php))
@@ -22,6 +23,8 @@ if settings.START_MONGODB:
     print("MongoDB version: {}".format(mongodb))
 if settings.START_MYSQL:
     print("MySQL version: {}".format(mysql))
+if settings.START_REDIS:
+    print("Redis version: {}".format(redis))
 
 print("")
 
@@ -39,6 +42,9 @@ if settings.START_MONGODB:
 if settings.START_MYSQL:
     print("Starting MySQL")
     mysql.start()
+if settings.START_REDIS:
+    print("Starting Redis")
+    redis.start()
 
 print("")
 print("Menu:")
@@ -74,3 +80,5 @@ if settings.START_MONGODB:
     mongodb.stop()
 if settings.START_MYSQL:
     mysql.stop()
+if settings.START_REDIS:
+    redis.stop()

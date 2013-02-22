@@ -19,9 +19,15 @@ MYSQLADMIN_EXECUTABLE = os.path.join(MYSQL_CWD, "bin", "mysqladmin.exe")
 MYSQLADMIN_PARAMS = ['--host', '127.0.0.1', '--user', 'root']
 MYSQL_CONF = os.path.join(MYSQL_CWD, "bin", "my.ini")
 
+REDIS_CWD = os.path.join("C:\\", "opt", "redis")
+REDIS_SERVER_EXECUTABLE = os.path.join(REDIS_CWD, 'redis-server.exe')
+REDIS_CLI_EXECUTABLE = os.path.join(REDIS_CWD, 'redis-cli.exe')
+REDIS_CLI_PARAMS = ['-h', '127.0.0.1']
+
 MONGODB_PERIODICALLY_TOUCH_DB_FILES = True
 
 START_NGINX = True
 START_PHP = True
 START_MONGODB = True
 START_MYSQL = True
+START_REDIS = True
