@@ -1,12 +1,8 @@
 # coding=utf-8
-import glob
-import re
 import subprocess
 import os
 import settings
-import threading
 import sys
-import time
 
 class MySQL(object):
     def __init__(self):
